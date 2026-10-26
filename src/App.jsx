@@ -1,5 +1,42 @@
+import { useReducer, useEffect } from 'react';
+import { fetchPosts } from './api/postsApi';
+import { postsReducer, initialState } from './reducer/postsReducer';
+import PostList from './components/PostList';
+
 function App() {
-  return <h1>Post Dashboard</h1>;
+  const [state, dispatch] = useReducer(postsReducer, initialState);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadPosts() {
+      dispatch({ type: 'FETCH_START' });
+
+      try {
+        const data = await fetchPosts();
+        if (!ignore) {
+          dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        }
+      } catch (error) {
+        if (!ignore) {
+          dispatch({ type: 'FETCH_ERROR', payload: error.message });
+        }
+      }
+    }
+
+    loadPosts();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  return (
+    <div>
+      <h1>Post Dashboard</h1>
+      <PostList posts={state.posts} />
+    </div>
+  );
 }
 
 export default App;
