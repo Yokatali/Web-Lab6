@@ -31,10 +31,22 @@ function App() {
     };
   }, []);
 
+  let content;
+
+  if (state.loading) {
+    content = <p>Loading posts...</p>;
+  } else if (state.error) {
+    content = <p>Error: {state.error}</p>;
+  } else if (state.posts.length === 0) {
+    content = <p>No posts found.</p>;
+  } else {
+    content = <PostList posts={state.posts} />;
+  }
+
   return (
     <div>
       <h1>Post Dashboard</h1>
-      <PostList posts={state.posts} />
+      {content}
     </div>
   );
 }
