@@ -4,9 +4,7 @@ function PostList({ posts }) {
     return (
         <div>
             {posts.map((post) => (
-                <div>
-                    <Post key={post.id} title={post.title} body={post.body}/>
-                </div>
+                <Post key={post.id} title={post.title} body={post.body} />
             ))}
         </div>
     );
